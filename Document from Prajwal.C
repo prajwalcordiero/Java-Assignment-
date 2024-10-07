@@ -1,78 +1,100 @@
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
+public class Calci {
 
-public class Bin_to_Dec {
-	 public  Bin_to_Dec(){
-	        JFrame Frame3 = new JFrame("Binary To decimal");
-	         Frame3.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-	         Frame3.setSize(500,500);
-	         Frame3.setLayout(null);
+    public Calci() {
+        JFrame frame = new JFrame("Calculator");
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setSize(500, 500);
+        frame.setLayout(new BorderLayout());
 
+        JTextField calciDisplay = new JTextField();
+        calciDisplay.setEditable(false);
+        calciDisplay.setHorizontalAlignment(SwingConstants.RIGHT);
+        calciDisplay.setFont(new Font("Arial", Font.BOLD, 50));
+        calciDisplay.setPreferredSize(new Dimension(400, 100));
+        frame.add(calciDisplay, BorderLayout.NORTH);
 
+        JPanel btnPanel = new JPanel();
+        btnPanel.setLayout(new GridLayout(4, 4, 20, 20));
 
-	         JLabel Input = new JLabel( "Input: ");
-	         JLabel Output = new JLabel("Output: ");
-	         JTextField InputField = new JTextField();
-	         JTextField OutputField = new JTextField();
-	         JButton ConvertBtn = new JButton("Convert");
-	         String[] options = {"Decimal to Binary", "Binary to Decimal"};
-	         JComboBox<String> ConversionType = new JComboBox<>(options);
+        String[] buttons = {
+            "7", "8", "9", "/",
+            "4", "5", "6", "*",
+            "1", "2", "3", "-",
+            "0", "C", "=", "+"
+        };
 
+        final String[] currentOp = {""};
+        final double[] operand1 = {0};
+        final boolean[] newOperand = {true};
 
-	         Input.setBounds(45, 10, 150, 50);
-	        Output.setBounds(50, 60, 150, 50);
-	        InputField.setBounds(100, 20, 250, 30);
-	        OutputField.setBounds(100, 70, 250, 30);
-	        OutputField.setEditable(false); 
-	        ConvertBtn.setBounds(100, 170, 120, 50);
-	        ConversionType.setBounds(100, 120, 150, 30);
+        for (String text : buttons) {
+            JButton btn = new JButton(text);
+            btn.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    String cmd = btn.getText();
 
+                    if (cmd.equals("C")) {
+                        calciDisplay.setText("");
+                        operand1[0] = 0;
+                        currentOp[0] = "";
+                        newOperand[0] = true;
+                    } 
+                    else if (cmd.equals("=")) {
+                        if (!currentOp[0].isEmpty()) {
+                            double operand2 = Double.parseDouble(calciDisplay.getText());
+                            double result = calculate(operand1[0], operand2, currentOp[0]);
+                            calciDisplay.setText(String.valueOf(result));
+                            currentOp[0] = "";
+                            newOperand[0] = true;
+                        }
+                    } 
+                    else if ("+-*/".contains(cmd)) {
+                        operand1[0] = Double.parseDouble(calciDisplay.getText());
+                        currentOp[0] = cmd;
+                        newOperand[0] = true; 
+                    } 
+                    else {
+                        if (newOperand[0]) {
+                            calciDisplay.setText(cmd);
+                            newOperand[0] = false;
+                        } else {
+                            calciDisplay.setText(calciDisplay.getText() + cmd);
+                        }
+                    }
+                }
+            });
+            btnPanel.add(btn);
+        }
+        frame.add(btnPanel, BorderLayout.CENTER);
+        frame.setVisible(true);
+    }
 
+    public static double calculate(double operand1, double operand2, String operator) {
+        switch (operator) {
+            case "+":
+                return operand1 + operand2;
+            case "-":
+                return operand1 - operand2;
+            case "*":
+                return operand1 * operand2;
+            case "/":
+                if (operand2 != 0) {
+                    return operand1 / operand2;
+                } else {
+                    JOptionPane.showMessageDialog(null, "Cannot divide by Zero");
+                    return 0;
+                }
+            default:
+                return 0;
+        }
+    }
 
-
-	        ConvertBtn.addActionListener(new ActionListener() {
-	          @Override
-	          public void actionPerformed(ActionEvent e) {
-	              try {
-	                  String selectedConversion = (String) ConversionType.getSelectedItem();
-	                  if (selectedConversion.equals("Decimal to Binary")) {
-	                      int decimal = Integer.parseInt(InputField.getText());
-	                      String binary = Integer.toBinaryString(decimal);
-	                      OutputField.setText(binary);
-	                  } else if (selectedConversion.equals("Binary to Decimal")) {
-	                      String binary = InputField.getText();
-	                      int decimal = Integer.parseInt(binary, 2);
-	                      OutputField.setText(String.valueOf(decimal));
-	                  }
-	              } catch (NumberFormatException ex) {
-	                  OutputField.setText("Invalid Input");
-	              }
-	          }
-	      });
-
-
-
-
-
-	      Frame3.add(Input);
-	      Frame3.add(Output);
-	      Frame3.add(InputField);
-	      Frame3.add(OutputField);
-	      Frame3.add(ConvertBtn);
-	      Frame3.add(ConversionType);
-	      Frame3.setVisible(true);
-
-	      }
-
-	    public static void main(String[] args) {
-	        
-	        new Bin_to_Dec();
-	    }
-
+    public static void main(String[] args) {
+        
+        new Calci();
+    }
 }
