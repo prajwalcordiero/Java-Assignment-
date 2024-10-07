@@ -1,0 +1,138 @@
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.*;
+public class Electricity_bill  {
+
+	public Electricity_bill() {
+		// TODO Auto-generated method stub
+		JFrame frame = new JFrame();
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frame.setSize(500, 500);
+		frame.setLayout(null);
+		
+
+		JLabel consumer_no = new JLabel("Consumer No: ");
+		JLabel consumer_name = new JLabel("Consumer name: ");
+		JLabel previous_reading = new JLabel("Previous reading: ");
+		JLabel current_reading = new JLabel("Current reading: ");
+		JLabel connection_type = new JLabel("Connection type: ");
+		
+
+		JTextField c_no_input = new JTextField();
+		JTextField c_name_input = new JTextField();
+		JTextField previous_reading_input = new JTextField();
+		JTextField current_reading_input = new JTextField();
+		
+		JRadioButton con_type_Domestic = new JRadioButton("Domestic");
+		JRadioButton con_type_Commercial = new JRadioButton("Commercial");
+		
+		JButton button_display = new JButton("Display Bill");
+		JButton button_cancel = new JButton("Cancel");
+		
+		JLabel amount = new JLabel();
+		
+		consumer_no.setBounds(0, 0, 200, 20);
+		consumer_name.setBounds(0, 30, 200, 20);
+		previous_reading.setBounds(0, 60, 200, 20);
+		current_reading.setBounds(0, 90, 200, 20);
+		connection_type.setBounds(0, 120, 200, 20);
+		
+		c_no_input.setBounds(110, 0, 200, 20);
+		c_name_input.setBounds(110, 30, 200, 20);
+		previous_reading_input.setBounds(110, 60, 200, 20);
+		current_reading_input.setBounds(110, 90, 200, 20);
+		
+		con_type_Domestic.setBounds(110, 120, 100, 20);
+		con_type_Commercial.setBounds(220, 120, 100, 20);
+		
+		button_display.setBounds(0, 150, 100, 20);
+		button_cancel.setBounds(120, 150, 100, 20);
+		
+		 ButtonGroup group = new ButtonGroup();
+	        group.add(con_type_Domestic);
+	        group.add(con_type_Commercial);
+
+		amount.setBounds(0, 180, 100, 20);
+		
+		button_cancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frame.dispose();
+			}
+		});
+		
+		button_display.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+			
+						
+				double bill = Integer.parseInt(current_reading_input.getText())- Integer.parseInt(previous_reading_input.getText());
+				
+				if (con_type_Domestic.isSelected()) {
+					
+					if (bill <= 100)
+						bill = bill * 1;
+					else if (bill <= 200 )
+						bill = 100 + (bill - 100) * 2.5;
+					else if (bill <= 500)
+						bill = 100 + (bill - 100) * 2.5 + (bill - 200) * 4;
+					else
+						bill = 100 + (bill - 100) * 2.5 + (bill - 200) * 4 + (bill - 500) * 6;
+				}
+				else if (con_type_Commercial.isSelected()) {
+					
+					if (bill <= 100)
+						bill = bill * 2;
+					else if (bill <= 200 )
+						bill = 100 + (bill - 100) * 4.5;
+					else if (bill <= 500)
+						bill = 100 + (bill - 100) * 2.5 + (bill - 200) * 6;
+					else
+						bill = 100 + (bill - 100) * 2.5 + (bill - 200) * 4 + (bill - 500) * 7;
+				}
+				
+				
+				String a = c_no_input.getText();
+				String b  = c_name_input.getText();
+				String c = previous_reading_input.getText() ;
+				String d = current_reading_input.getText() ;
+				String  e1 = con_type_Domestic.isSelected()? con_type_Domestic.getText() : con_type_Commercial.isSelected() ? con_type_Commercial.getText() : "None Selected";
+				
+				String message = String.format("**Electricity Bill**\nConsumer Name:%s\nConsumer Number:%s\nPrevious Reading:%s\nCorrent Reading:%s\nConnection Type:%s\nbill:%s\n", a,b,c,d,e1,bill);
+						
+				
+						JOptionPane.showMessageDialog(null, message);
+			}
+
+			
+		});
+		
+		
+		frame.add(consumer_no); 
+		frame.add(consumer_name); 
+		frame.add(previous_reading); 
+		frame.add(current_reading); 
+		frame.add(connection_type);
+		
+
+		frame.add(c_no_input); 
+		frame.add(c_name_input); 
+		frame.add(previous_reading_input); 
+		frame.add(current_reading_input); 
+		frame.add(con_type_Domestic);
+		frame.add(con_type_Commercial);
+		
+		frame.add(button_display);
+		frame.add(button_cancel);
+		
+		frame.add(amount);
+		  
+		frame.setVisible(true);
+	}
+	public static void main(String[] args) {
+         
+        new  Electricity_bill();
+    }
+
+}
